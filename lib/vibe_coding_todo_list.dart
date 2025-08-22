@@ -8,3 +8,5 @@ export 'views/todo_lists_view.dart';
 export 'views/task_list_view.dart';
 export 'views/task_edit_view.dart';
 export 'services/notification_service.dart';
+export 'theme/glassmorphism_theme.dart';
+export 'widgets/animated_background.dart';

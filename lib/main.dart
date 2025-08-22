@@ -3,6 +3,7 @@ import 'repositories/todo_repository.dart';
 import 'view_models/todo_list_view_model.dart';
 import 'views/todo_lists_view.dart';
 import 'services/notification_service.dart';
+import 'theme/glassmorphism_theme.dart';
 
 void main() {
   runApp(const TodoApp());
@@ -18,10 +19,8 @@ class TodoApp extends StatelessWidget {
     return MaterialApp(
       title: 'Vibe Coding Todo List',
       scaffoldMessengerKey: scaffoldMessengerKey,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: GlassmorphismTheme.theme,
+      debugShowCheckedModeBanner: false,
       home: TodoAppHome(scaffoldMessengerKey: scaffoldMessengerKey),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
 import '../view_models/todo_list_view_model.dart';
+import '../theme/glassmorphism_theme.dart';
+import '../widgets/animated_background.dart';
 
 class TaskEditView extends StatefulWidget {
   final TodoListViewModel viewModel;
@@ -45,93 +47,196 @@ class _TaskEditViewState extends State<TaskEditView> {
   Widget build(BuildContext context) {
     final isEditing = widget.task != null;
     
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Edit Task' : 'Create Task'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Task Description',
-                border: OutlineInputBorder(),
+    return AnimatedBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: GlassCard(
+            padding: const EdgeInsets.all(8),
+            borderRadius: BorderRadius.circular(12),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_rounded,
+                color: GlassmorphismTheme.textPrimary,
               ),
-              maxLines: 3,
-              autofocus: !isEditing,
+              onPressed: () => Navigator.of(context).pop(),
             ),
-            const SizedBox(height: 16),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Due Date & Time',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+          ),
+          title: Text(
+            isEditing ? 'Edit Task' : 'Create Task',
+            style: const TextStyle(
+              color: GlassmorphismTheme.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                GlassCard(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Task Description',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: GlassmorphismTheme.textPrimary,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: _selectDate,
-                            child: Container(
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _descriptionController,
+                        autofocus: !isEditing,
+                        maxLines: 3,
+                        style: const TextStyle(color: GlassmorphismTheme.textPrimary),
+                        decoration: InputDecoration(
+                          hintText: 'Enter task description...',
+                          hintStyle: const TextStyle(color: GlassmorphismTheme.textSecondary),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: GlassmorphismTheme.primaryPurple,
+                              width: 2,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white.withValues(alpha: 0.1),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                GlassCard(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Due Date & Time',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: GlassmorphismTheme.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GlassCard(
+                              onTap: _selectDate,
                               padding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                                horizontal: 16,
+                                vertical: 16,
+                                horizontal: 12,
                               ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                                style: const TextStyle(fontSize: 16),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.calendar_today_rounded,
+                                    color: GlassmorphismTheme.primaryPurple,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: GlassmorphismTheme.textPrimary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: InkWell(
-                            onTap: _selectTime,
-                            child: Container(
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: GlassCard(
+                              onTap: _selectTime,
                               padding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                                horizontal: 16,
+                                vertical: 16,
+                                horizontal: 12,
                               ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                _selectedTime.format(context),
-                                style: const TextStyle(fontSize: 16),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.access_time_rounded,
+                                    color: GlassmorphismTheme.primaryPink,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _selectedTime.format(context),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: GlassmorphismTheme.textPrimary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Container(
+                  width: double.infinity,
+                  height: 54,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        GlassmorphismTheme.primaryPurple,
+                        GlassmorphismTheme.primaryPink,
                       ],
                     ),
-                  ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: _saveTask,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      isEditing ? 'Update Task' : 'Create Task',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _saveTask,
-              child: Text(isEditing ? 'Update Task' : 'Create Task'),
-            ),
-          ],
+          ),
         ),
       ),
     );
