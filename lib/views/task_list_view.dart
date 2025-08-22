@@ -13,11 +13,11 @@ class TaskListView extends StatelessWidget {
   final String? highlightTaskId;
 
   const TaskListView({
-    Key? key,
+    super.key,
     required this.viewModel,
     required this.todoList,
     this.highlightTaskId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +28,12 @@ class TaskListView extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          leading: GlassCard(
-            padding: const EdgeInsets.all(8),
-            borderRadius: BorderRadius.circular(12),
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: GlassmorphismTheme.textPrimary,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: GlassmorphismTheme.textPrimary,
             ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
             todoList.title,
@@ -149,34 +145,37 @@ class TaskListView extends StatelessWidget {
         color: cardColor,
       child: Row(
         children: [
-          // Checkbox
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: task.isCompleted 
-                  ? GlassmorphismTheme.primaryPurple
-                  : Colors.white.withValues(alpha: 0.5),
-                width: 2,
+          // Interactive Checkbox
+          GestureDetector(
+            onTap: () => viewModel.toggleTaskComplete(task.id),
+            child: Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: task.isCompleted 
+                    ? GlassmorphismTheme.primaryPurple
+                    : Colors.white.withValues(alpha: 0.5),
+                  width: 2,
+                ),
+                gradient: task.isCompleted 
+                  ? LinearGradient(
+                      colors: [
+                        GlassmorphismTheme.primaryPurple,
+                        GlassmorphismTheme.primaryPink,
+                      ],
+                    )
+                  : null,
               ),
-              gradient: task.isCompleted 
-                ? LinearGradient(
-                    colors: [
-                      GlassmorphismTheme.primaryPurple,
-                      GlassmorphismTheme.primaryPink,
-                    ],
+              child: task.isCompleted
+                ? const Icon(
+                    Icons.check_rounded,
+                    size: 18,
+                    color: Colors.white,
                   )
                 : null,
             ),
-            child: task.isCompleted
-              ? const Icon(
-                  Icons.check_rounded,
-                  size: 16,
-                  color: Colors.white,
-                )
-              : null,
           ),
           const SizedBox(width: 16),
           // Content
@@ -246,87 +245,64 @@ class TaskListView extends StatelessWidget {
               ],
             ),
           ),
-          // Actions
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: () => viewModel.toggleTaskComplete(task.id),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white.withValues(alpha: 0.1),
-                  ),
-                  child: Icon(
-                    task.isCompleted 
-                      ? Icons.undo_rounded
-                      : Icons.check_rounded,
-                    size: 16,
-                    color: Colors.white.withValues(alpha: 0.8),
+          // Menu button
+          GlassCard(
+            padding: const EdgeInsets.all(8),
+            borderRadius: BorderRadius.circular(12),
+            child: PopupMenuButton<String>(
+              icon: const Icon(
+                Icons.more_vert_rounded,
+                color: GlassmorphismTheme.textSecondary,
+                size: 20,
+              ),
+              color: GlassmorphismTheme.darkBackground,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.edit_rounded,
+                        color: GlassmorphismTheme.primaryBlue,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Edit',
+                        style: TextStyle(color: GlassmorphismTheme.textPrimary),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              GlassCard(
-                padding: const EdgeInsets.all(6),
-                borderRadius: BorderRadius.circular(8),
-                child: PopupMenuButton<String>(
-                  icon: const Icon(
-                    Icons.more_vert_rounded,
-                    color: GlassmorphismTheme.textSecondary,
-                    size: 16,
-                  ),
-                  color: GlassmorphismTheme.darkBackground,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.edit_rounded,
-                            color: GlassmorphismTheme.primaryBlue,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            'Edit',
-                            style: TextStyle(color: GlassmorphismTheme.textPrimary),
-                          ),
-                        ],
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.delete_rounded,
+                        color: Colors.red.shade400,
+                        size: 18,
                       ),
-                    ),
-                    PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.delete_rounded,
-                            color: Colors.red.shade400,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 12),
-                          const Text(
-                            'Delete',
-                            style: TextStyle(color: GlassmorphismTheme.textPrimary),
-                          ),
-                        ],
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Delete',
+                        style: TextStyle(color: GlassmorphismTheme.textPrimary),
                       ),
-                    ),
-                  ],
-                  onSelected: (value) {
-                    if (value == 'edit') {
-                      _navigateToEditTask(context, task);
-                    } else if (value == 'delete') {
-                      _showDeleteConfirmation(context, task);
-                    }
-                  },
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+              onSelected: (value) {
+                if (value == 'edit') {
+                  _navigateToEditTask(context, task);
+                } else if (value == 'delete') {
+                  _showDeleteConfirmation(context, task);
+                }
+              },
+            ),
           ),
         ],
       ),

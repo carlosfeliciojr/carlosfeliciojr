@@ -14,9 +14,9 @@ class GlassmorphismTheme {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      primaryPurple.withOpacity(0.8),
-      primaryPink.withOpacity(0.6),
-      primaryBlue.withOpacity(0.4),
+      primaryPurple.withValues(alpha: 0.8),
+      primaryPink.withValues(alpha: 0.6),
+      primaryBlue.withValues(alpha: 0.4),
     ],
   );
 
@@ -24,9 +24,9 @@ class GlassmorphismTheme {
     begin: Alignment.topRight,
     end: Alignment.bottomLeft,
     colors: [
-      primaryPink.withOpacity(0.7),
-      primaryPurple.withOpacity(0.5),
-      primaryBlue.withOpacity(0.3),
+      primaryPink.withValues(alpha: 0.7),
+      primaryPurple.withValues(alpha: 0.5),
+      primaryBlue.withValues(alpha: 0.3),
     ],
   );
 
@@ -34,8 +34,8 @@ class GlassmorphismTheme {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Colors.white.withOpacity(0.2),
-      Colors.white.withOpacity(0.1),
+      Colors.white.withValues(alpha: 0.2),
+      Colors.white.withValues(alpha: 0.1),
     ],
   );
 
@@ -46,11 +46,9 @@ class GlassmorphismTheme {
       primary: primaryPurple,
       secondary: primaryPink,
       surface: cardBackground,
-      background: darkBackground,
       onPrimary: textPrimary,
       onSecondary: textPrimary,
       onSurface: textPrimary,
-      onBackground: textPrimary,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -70,7 +68,7 @@ class GlassmorphismTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: primaryPurple.withOpacity(0.3),
+        backgroundColor: primaryPurple.withValues(alpha: 0.3),
         foregroundColor: textPrimary,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -98,14 +96,14 @@ class GlassCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   const GlassCard({
-    Key? key,
+    super.key,
     required this.child,
     this.padding,
     this.borderRadius,
     this.blurSigma = 10.0,
     this.color,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -117,14 +115,14 @@ class GlassCard extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                color!.withOpacity(0.2),
-                color!.withOpacity(0.1),
+                color!.withValues(alpha: 0.2),
+                color!.withValues(alpha: 0.1),
               ],
             )
           : GlassmorphismTheme.cardGradient,
         borderRadius: borderRadius ?? BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -148,10 +146,10 @@ class GradientBackground extends StatelessWidget {
   final List<Color>? colors;
 
   const GradientBackground({
-    Key? key,
+    super.key,
     required this.child,
     this.colors,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -176,11 +174,11 @@ class FloatingBlob extends StatelessWidget {
   final Alignment alignment;
 
   const FloatingBlob({
-    Key? key,
+    super.key,
     required this.size,
     required this.color,
     required this.alignment,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -194,8 +192,8 @@ class FloatingBlob extends StatelessWidget {
             shape: BoxShape.circle,
             gradient: RadialGradient(
               colors: [
-                color.withOpacity(0.3),
-                color.withOpacity(0.1),
+                color.withValues(alpha: 0.3),
+                color.withValues(alpha: 0.1),
                 Colors.transparent,
               ],
             ),

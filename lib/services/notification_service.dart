@@ -9,18 +9,15 @@ class NotificationService {
   NotificationService._internal();
 
   static GlobalKey<ScaffoldMessengerState>? _scaffoldMessengerKey;
-  static GlobalKey<NavigatorState>? _navigatorKey;
   static OnTaskTapCallback? _onTaskTap;
   static final List<OverdueNotification> _pendingNotifications = [];
   static bool _isShowingNotification = false;
 
   static void initialize(
     GlobalKey<ScaffoldMessengerState> scaffoldKey,
-    {GlobalKey<NavigatorState>? navigatorKey,
-    OnTaskTapCallback? onTaskTap}
+    {OnTaskTapCallback? onTaskTap}
   ) {
     _scaffoldMessengerKey = scaffoldKey;
-    _navigatorKey = navigatorKey;
     _onTaskTap = onTaskTap;
   }
 

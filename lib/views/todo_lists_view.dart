@@ -10,9 +10,9 @@ class TodoListsView extends StatelessWidget {
   final TodoListViewModel viewModel;
 
   const TodoListsView({
-    Key? key,
+    super.key,
     required this.viewModel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -10,11 +10,11 @@ class TaskEditView extends StatefulWidget {
   final Task? task;
 
   const TaskEditView({
-    Key? key,
+    super.key,
     required this.viewModel,
     required this.listId,
     this.task,
-  }) : super(key: key);
+  });
 
   @override
   State<TaskEditView> createState() => _TaskEditViewState();
@@ -54,16 +54,12 @@ class _TaskEditViewState extends State<TaskEditView> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          leading: GlassCard(
-            padding: const EdgeInsets.all(8),
-            borderRadius: BorderRadius.circular(12),
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: GlassmorphismTheme.textPrimary,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: GlassmorphismTheme.textPrimary,
             ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
             isEditing ? 'Edit Task' : 'Create Task',
@@ -243,11 +239,73 @@ class _TaskEditViewState extends State<TaskEditView> {
   }
 
   Future<void> _selectDate() async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final initialDate = _selectedDate.isBefore(today) ? today : _selectedDate;
+    
     final date = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime.now(),
+      initialDate: initialDate,
+      firstDate: today,
       lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogTheme: DialogThemeData(
+              backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+            ),
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              surface: GlassmorphismTheme.darkBackground,
+              onSurface: GlassmorphismTheme.textPrimary,
+              primary: GlassmorphismTheme.primaryPurple,
+              onPrimary: Colors.white,
+              surfaceTint: Colors.transparent,
+            ),
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: GlassmorphismTheme.darkBackground,
+              surfaceTintColor: Colors.transparent,
+              headerBackgroundColor: GlassmorphismTheme.darkBackground,
+              headerForegroundColor: GlassmorphismTheme.textPrimary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              weekdayStyle: const TextStyle(
+                color: GlassmorphismTheme.textSecondary,
+              ),
+              dayStyle: const TextStyle(
+                color: GlassmorphismTheme.textPrimary,
+              ),
+              yearStyle: const TextStyle(
+                color: GlassmorphismTheme.textPrimary,
+              ),
+            ),
+          ),
+          child: Dialog(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(
+                  maxWidth: 400,
+                  maxHeight: 500,
+                ),
+                decoration: BoxDecoration(
+                  color: GlassmorphismTheme.darkBackground,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: child!,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
     
     if (date != null) {
@@ -261,6 +319,29 @@ class _TaskEditViewState extends State<TaskEditView> {
     final time = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogTheme: DialogThemeData(
+              backgroundColor: GlassmorphismTheme.darkBackground,
+            ),
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              surface: GlassmorphismTheme.darkBackground,
+              onSurface: GlassmorphismTheme.textPrimary,
+              primary: GlassmorphismTheme.primaryPurple,
+            ),
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: GlassmorphismTheme.darkBackground,
+              dialBackgroundColor: Colors.white.withValues(alpha: 0.1),
+              dialHandColor: GlassmorphismTheme.primaryPink,
+              dialTextColor: GlassmorphismTheme.textPrimary,
+              hourMinuteTextColor: GlassmorphismTheme.textPrimary,
+              dayPeriodTextColor: GlassmorphismTheme.textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     
     if (time != null) {

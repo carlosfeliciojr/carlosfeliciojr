@@ -1,5 +1,3 @@
-library vibe_coding_todo_list;
-
 export 'models/todo_list.dart';
 export 'models/task.dart';
 export 'repositories/todo_repository.dart';

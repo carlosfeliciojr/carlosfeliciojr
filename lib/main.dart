@@ -61,7 +61,6 @@ class _TodoAppHomeState extends State<TodoAppHome> {
     // Initialize notification service with navigation callback
     NotificationService.initialize(
       widget.scaffoldMessengerKey,
-      navigatorKey: widget.navigatorKey,
       onTaskTap: _navigateToTask,
     );
     
