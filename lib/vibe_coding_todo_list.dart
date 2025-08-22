@@ -7,3 +7,4 @@ export 'view_models/todo_list_view_model.dart';
 export 'views/todo_lists_view.dart';
 export 'views/task_list_view.dart';
 export 'views/task_edit_view.dart';
+export 'services/notification_service.dart';

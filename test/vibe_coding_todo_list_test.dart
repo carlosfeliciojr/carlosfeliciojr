@@ -176,4 +176,38 @@ void main() {
       expect(overdueTasks.first.description, 'Overdue task');
     });
   });
+
+  group('TodoListViewModel with Timer', () {
+    test('creates view model with timer', () {
+      final repository = TodoRepository();
+      final viewModel = TodoListViewModel(repository);
+      
+      expect(viewModel.lists, isEmpty);
+      expect(viewModel.tasks, isEmpty);
+      
+      viewModel.dispose();
+    });
+
+    test('force overdue check works', () {
+      final repository = TodoRepository();
+      final viewModel = TodoListViewModel(repository);
+      
+      final list = repository.createList('1', 'Test List');
+      repository.createTask(
+        id: '1',
+        listId: list.id,
+        description: 'Soon to be overdue',
+        dueDate: DateTime.now().subtract(const Duration(seconds: 1)),
+      );
+      
+      viewModel.loadData();
+      viewModel.forceOverdueCheck();
+      
+      final overdueTasks = viewModel.getOverdueTasks();
+      expect(overdueTasks.length, 1);
+      expect(overdueTasks.first.description, 'Soon to be overdue');
+      
+      viewModel.dispose();
+    });
+  });
 }

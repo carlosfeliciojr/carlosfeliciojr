@@ -17,6 +17,49 @@ class TodoListsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Todo Lists'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          ListenableBuilder(
+            listenable: viewModel,
+            builder: (context, child) {
+              final overdueCount = viewModel.getOverdueTasks().length;
+              if (overdueCount > 0) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.warning,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$overdueCount vencida${overdueCount > 1 ? 's' : ''}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
       body: ListenableBuilder(
         listenable: viewModel,
