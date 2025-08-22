@@ -111,3 +111,49 @@ For this TODO app, use simplified MVVM without domain layer:
 - **Views**: Widget classes for UI screens
 - **ViewModels**: Business logic and state management
 - **Repositories**: In-memory data management (no external services needed)
+
+# Conventional Commits Rules
+
+Follow the Conventional Commits specification (https://www.conventionalcommits.org/en/v1.0.0/):
+
+## Commit Message Format
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+## Types
+
+- **feat**: A new feature for the user
+- **fix**: A bug fix for the user
+- **docs**: Changes to documentation
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **test**: Adding missing tests or correcting existing tests
+- **chore**: Changes to the build process or auxiliary tools and libraries such as documentation generation
+- **perf**: A code change that improves performance
+- **ci**: Changes to CI configuration files and scripts
+- **build**: Changes that affect the build system or external dependencies
+- **revert**: Reverts a previous commit
+
+## Examples
+
+- `feat: add user authentication`
+- `fix: resolve null pointer exception in task deletion`
+- `docs: update README with installation instructions`
+- `refactor: extract task validation logic into separate method`
+- `test: add unit tests for TodoList model`
+- `chore: update dependencies to latest versions`
+
+## Rules
+
+1. Use present tense ("add feature" not "added feature")
+2. Use lowercase for type and description
+3. Keep description under 50 characters
+4. Include scope when applicable: `feat(auth): add login functionality`
+5. Use body to explain what and why, not how
+6. Include breaking change footer if applicable: `BREAKING CHANGE: removed deprecated API`
