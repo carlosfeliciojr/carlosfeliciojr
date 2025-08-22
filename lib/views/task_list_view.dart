@@ -10,11 +10,13 @@ import 'task_edit_view.dart';
 class TaskListView extends StatelessWidget {
   final TodoListViewModel viewModel;
   final TodoList todoList;
+  final String? highlightTaskId;
 
   const TaskListView({
     Key? key,
     required this.viewModel,
     required this.todoList,
+    this.highlightTaskId,
   }) : super(key: key);
 
   @override
@@ -131,14 +133,20 @@ class TaskListView extends StatelessWidget {
 
   Widget _buildTaskTile(BuildContext context, Task task) {
     Color? cardColor;
-    if (task.isOverdue && !task.isCompleted) {
+    bool isHighlighted = highlightTaskId == task.id;
+    
+    if (isHighlighted) {
+      cardColor = GlassmorphismTheme.primaryPink;
+    } else if (task.isOverdue && !task.isCompleted) {
       cardColor = Colors.red;
     } else if (task.isCompleted) {
       cardColor = GlassmorphismTheme.primaryBlue;
     }
 
-    return GlassCard(
-      color: cardColor,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      child: GlassCard(
+        color: cardColor,
       child: Row(
         children: [
           // Checkbox
@@ -321,6 +329,7 @@ class TaskListView extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
 
+typedef OnTaskTapCallback = Function(Task task);
+
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
 
   static GlobalKey<ScaffoldMessengerState>? _scaffoldMessengerKey;
+  static GlobalKey<NavigatorState>? _navigatorKey;
+  static OnTaskTapCallback? _onTaskTap;
   static final List<OverdueNotification> _pendingNotifications = [];
   static bool _isShowingNotification = false;
 
-  static void initialize(GlobalKey<ScaffoldMessengerState> key) {
-    _scaffoldMessengerKey = key;
+  static void initialize(
+    GlobalKey<ScaffoldMessengerState> scaffoldKey,
+    {GlobalKey<NavigatorState>? navigatorKey,
+    OnTaskTapCallback? onTaskTap}
+  ) {
+    _scaffoldMessengerKey = scaffoldKey;
+    _navigatorKey = navigatorKey;
+    _onTaskTap = onTaskTap;
   }
 
   void showOverdueTaskNotification(Task task) {
@@ -79,7 +89,9 @@ class NotificationService {
           label: 'Ver',
           textColor: Colors.white,
           onPressed: () {
-            // Aqui poderia navegar para a tarefa específica
+            if (_onTaskTap != null) {
+              _onTaskTap!(notification.task);
+            }
           },
         ),
       ),

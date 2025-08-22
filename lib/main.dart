@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'repositories/todo_repository.dart';
 import 'view_models/todo_list_view_model.dart';
 import 'views/todo_lists_view.dart';
+import 'views/task_list_view.dart';
 import 'services/notification_service.dart';
 import 'theme/glassmorphism_theme.dart';
+import 'models/task.dart';
 
 void main() {
   runApp(const TodoApp());
@@ -15,23 +17,30 @@ class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+    final navigatorKey = GlobalKey<NavigatorState>();
     
     return MaterialApp(
       title: 'Vibe Coding Todo List',
+      navigatorKey: navigatorKey,
       scaffoldMessengerKey: scaffoldMessengerKey,
       theme: GlassmorphismTheme.theme,
       debugShowCheckedModeBanner: false,
-      home: TodoAppHome(scaffoldMessengerKey: scaffoldMessengerKey),
+      home: TodoAppHome(
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        navigatorKey: navigatorKey,
+      ),
     );
   }
 }
 
 class TodoAppHome extends StatefulWidget {
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
+  final GlobalKey<NavigatorState> navigatorKey;
   
   const TodoAppHome({
     super.key,
     required this.scaffoldMessengerKey,
+    required this.navigatorKey,
   });
 
   @override
@@ -46,11 +55,15 @@ class _TodoAppHomeState extends State<TodoAppHome> {
   void initState() {
     super.initState();
     
-    // Initialize notification service
-    NotificationService.initialize(widget.scaffoldMessengerKey);
-    
     _repository = TodoRepository();
     _viewModel = TodoListViewModel(_repository);
+    
+    // Initialize notification service with navigation callback
+    NotificationService.initialize(
+      widget.scaffoldMessengerKey,
+      navigatorKey: widget.navigatorKey,
+      onTaskTap: _navigateToTask,
+    );
     
     // Create some sample data for demonstration
     _createSampleData();
@@ -137,6 +150,23 @@ class _TodoAppHomeState extends State<TodoAppHome> {
 
     // Notify the view model to update
     _viewModel.loadData();
+  }
+
+  void _navigateToTask(Task task) {
+    // Find the todo list that contains this task
+    final todoList = _repository.getListById(task.listId);
+    if (todoList != null) {
+      // Navigate to the task list view with the task highlighted
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => TaskListView(
+            viewModel: _viewModel,
+            todoList: todoList,
+            highlightTaskId: task.id,
+          ),
+        ),
+      );
+    }
   }
 
   @override
